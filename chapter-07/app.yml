@@ -1,0 +1,104 @@
+##################################################################################################
+# Hello service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-svc
+  labels:
+    app: hello-svc
+spec:
+  # type: LoadBalancer
+  selector:
+    app: hello-svc
+  ports:
+  - name: http
+    port: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hello-svc
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hello-svc
+    spec:
+      containers:
+      - name: hello-svc
+        image: hello-app:latest
+        imagePullPolicy: Never
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: app_name
+          value: "hello"
+        - name: formatter_host
+          value: "formatter-svc"
+---
+##################################################################################################
+# Formatter service v1/v2
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: formatter-svc
+  labels:
+    app: formatter-svc
+spec:
+  selector:
+    app: formatter-svc
+  ports:
+  - name: http
+    port: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: formatter-svc-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: formatter-svc
+        version: v1
+    spec:
+      containers:
+      - name: formatter-svc
+        image: hello-app:latest
+        imagePullPolicy: Never
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: app_name
+          value: "formatter"
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: formatter-svc-v2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: formatter-svc
+        version: v2
+    spec:
+      containers:
+      - name: formatter-svc
+        image: hello-app:latest
+        imagePullPolicy: Never
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: app_name
+          value: "formatter"
+        - name: professor
+          value: "true"

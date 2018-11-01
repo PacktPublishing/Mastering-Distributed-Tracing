@@ -1,0 +1,11 @@
+[[constraint]]
+  name = "github.com/uber/jaeger-client-go"
+  version = "^2.14.0"
+
+[[constraint]]
+  name = "github.com/go-sql-driver/mysql"
+  version = "1.4.0"
+
+[[constraint]]
+  name = "github.com/opentracing-contrib/go-stdlib"
+  branch = "master"
