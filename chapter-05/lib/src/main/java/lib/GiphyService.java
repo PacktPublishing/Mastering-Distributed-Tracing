@@ -16,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class GiphyService {
     private final static String GIPHY_URL = "http://api.giphy.com/v1/gifs/search";
     private final static String GIPHY_API_TOKEN = "DhFQzq6E4uSzDgx6FFmTC0xqV0iFYDFK";
+    private final static String NO_IDEA = "https://media0.giphy.com/media/3o6UBil4zn1Tt03PI4/giphy.gif";
 
     @Bean
     public RestTemplate restTemplate() {
@@ -39,7 +40,8 @@ public class GiphyService {
                 d -> d.images != null && d.images.original != null && d.images.original.url != null
             ).map(d -> d.images.original.url).collect(Collectors.toList());
             if (urls.isEmpty()) {
-                return null;
+                System.out.println("Giphy returned no images for " + query);
+                return NO_IDEA;
             }
             System.out.println("Giphy returned " + urls.size() + " images for " + query);
             int pick = (int)(Math.random() * urls.size());
@@ -48,7 +50,7 @@ public class GiphyService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return NO_IDEA;
     }
 
     public static class Response {
