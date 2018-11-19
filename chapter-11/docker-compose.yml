@@ -1,0 +1,75 @@
+version: '3.5'
+
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash-oss:6.2.3
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5000:5000"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.2.3
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config:ro
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  prom:
+    image: prom/prometheus:v2.5.0
+    volumes:
+      - ./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
+    ports:
+      - 9090:9090
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.6
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "14267"
+      - "14268:14268"
+      - "14269"
+      - "16686:16686"
+      - "16687"
+      - "9411:9411"
+    restart: on-failure
+
+  hello-1:
+    build:
+      context: ./exercise1/hello
+    ports:
+      - 8080:8080
+    environment:
+      logstash_host: logstash
+      formatter_host: formatter-1
+      formatter_port: 8082
+
+  formatter-1:
+    build:
+      context: ./exercise1/formatter
+    ports:
+      - 8082:8082
+    environment:
+      logstash_host: logstash

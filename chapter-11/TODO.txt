@@ -1,0 +1,11 @@
+- remove unused make targets
+
+sum(rate(span_count[1m])) by (service, error)
+histogram_quantile(0.95, sum(rate(span_bucket[1m])) by (le)) 
+
+hello-svc_1  | 19-11-2018 05:05:57.155 [main] INFO  hello.HelloApp.logStarted - Started HelloApp in 12.808 seconds (JVM running for 14.858)
+
+kibana_1             | {"type":"log","@timestamp":"2018-11-19T02:04:15Z","tags":["status","plugin:elasticsearch@6.2.3","info"],"pid":1,"state":"green","message":"Status changed from red to green - Ready","prevState":"red","prevMsg":"Unable to connect to Elasticsearch at http://elasticsearch:9200."}
+logstash_1           | [2018-11-19T02:05:12,470][INFO ][logstash.inputs.tcp      ] Starting tcp input listener {:address=>"0.0.0.0:5000", :ssl_enable=>"false"}
+logstash_1           | [2018-11-19T02:05:13,245][INFO ][logstash.pipeline        ] Pipeline started succesfully {:pipeline_id=>"main", :thread=>"#<Thread:0xc0f26c3 run>"}
+logstash_1           | [2018-11-19T02:05:13,605][INFO ][logstash.agent           ] Pipelines running {:count=>1, :pipelines=>["main"]}

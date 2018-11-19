@@ -35,8 +35,10 @@ services:
       - "9411:9411"
     restart: on-failure
 
-# Tip: to remove messages from Redis, find its container ID from `docker ps`
-#      start redis-cli as below and remove the message by uuid:
+# Tip: to remove messages from Redis
+#   - find its container ID from `docker ps`
+#   - start redis-cli as below
+#   - remove the message by uuid
 #
 # $ docker exec -it d8414a656714 redis-cli
 # 127.0.0.1:6379> zrange lobby 0 -1
