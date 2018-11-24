@@ -11,6 +11,7 @@
         <module>hello</module>
         <module>formatter</module>
         <module>client</module>
+        <module>lib</module>
     </modules>
 
     <parent>

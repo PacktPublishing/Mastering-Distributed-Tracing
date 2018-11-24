@@ -13,7 +13,6 @@
 
     <modules>
         <module>exercise1</module>
-        <module>lib</module>
     </modules>
 
     <parent>

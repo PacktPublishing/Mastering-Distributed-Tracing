@@ -1,7 +1,10 @@
 - remove unused make targets
 
+https://github.com/opentracing-contrib/java-spring-cloud/blob/1be2ef50a2ca930319cda4db06088009080d94b7/instrument-starters/opentracing-spring-cloud-core/src/main/java/io/opentracing/contrib/spring/cloud/log/SpanLogsAppender.java
+
 sum(rate(span_count[1m])) by (service, error)
 histogram_quantile(0.95, sum(rate(span_bucket[1m])) by (le)) 
+sum(rate(span_count{span_kind="server"}[1m])) by (service,operation,error)
 
 hello-svc_1  | 19-11-2018 05:05:57.155 [main] INFO  hello.HelloApp.logStarted - Started HelloApp in 12.808 seconds (JVM running for 14.858)
 
