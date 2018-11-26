@@ -8,7 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Integration with Metrics and Logs</name>
+    <name>chapter11</name>
     <description>Chapter 11 - Integration with Metrics and Logs</description>
 
     <modules>
