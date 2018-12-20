@@ -1,0 +1,12 @@
+{
+    "mappings": {
+        "trace-summaries": {
+            "properties": {
+                "@timestamp": {
+                    "type": "date",
+                    "format": "epoch_millis"
+                }
+            }
+        }
+    }
+}
