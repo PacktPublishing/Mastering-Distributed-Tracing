@@ -1,4 +1,4 @@
-package tracefeatures;
+package model;
 
 import java.util.Collection;
 

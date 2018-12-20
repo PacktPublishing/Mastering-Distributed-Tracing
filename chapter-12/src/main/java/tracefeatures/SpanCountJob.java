@@ -19,6 +19,7 @@ import org.apache.flink.util.Collector;
 
 import model.ProtoUnmarshaler;
 import model.Span;
+import model.Trace;
 
 public class SpanCountJob {
 
