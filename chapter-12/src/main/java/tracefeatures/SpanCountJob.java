@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -32,7 +33,8 @@ public class SpanCountJob {
         properties.setProperty("bootstrap.servers", "localhost:9092");
         properties.setProperty("group.id", "tracefeatures");
 
-        FlinkKafkaConsumer<Span> consumer = new FlinkKafkaConsumer<>("jaeger-spans", //
+        FlinkKafkaConsumer<Span> consumer = new FlinkKafkaConsumer<>(//
+                "jaeger-spans", //
                 new ProtoUnmarshaler(), properties);
 
         // replay Kafka stream from beginning, useful for testing
@@ -69,31 +71,29 @@ public class SpanCountJob {
     }
 
     private static DataStream<TraceSummary> countSpansByService(DataStream<Trace> traces) {
-        return traces //
-                .flatMap(new FlatMapFunction<Trace, TraceSummary>() {
-                    @Override
-                    public void flatMap(Trace trace, Collector<TraceSummary> out) throws Exception {
-                        Map<String, Integer> counts = new HashMap<>();
-                        long startTime = 0;
-                        for (Span span : trace.spans) {
-                            String opKey = span.serviceName + "::" + span.operationName;
-                            Integer count = counts.get(opKey);
-                            if (count == null) {
-                                count = 1;
-                            } else {
-                                count += 1;
-                            }
-                            counts.put(opKey, count);
-                            if (startTime == 0 || startTime > span.startTimeMicros) {
-                                startTime = span.startTimeMicros;
-                            }
-                        }
-                        TraceSummary summary = new TraceSummary();
-                        summary.traceId = trace.traceId;
-                        summary.spanCounts = counts;
-                        summary.startTimeMillis = startTime / 1000; // to milliseconds
-                        out.collect(summary);
-                    }
-                });
+        return traces.map(SpanCountJob::traceToSummary);
+    }
+
+    private static TraceSummary traceToSummary(Trace trace) throws Exception {
+        Map<String, Integer> counts = new HashMap<>();
+        long startTime = 0;
+        for (Span span : trace.spans) {
+            String opKey = span.serviceName + "::" + span.operationName;
+            Integer count = counts.get(opKey);
+            if (count == null) {
+                count = 1;
+            } else {
+                count += 1;
+            }
+            counts.put(opKey, count);
+            if (startTime == 0 || startTime > span.startTimeMicros) {
+                startTime = span.startTimeMicros;
+            }
+        }
+        TraceSummary summary = new TraceSummary();
+        summary.traceId = trace.traceId;
+        summary.spanCounts = counts;
+        summary.startTimeMillis = startTime / 1000; // to milliseconds
+        return summary;
     }
 }
