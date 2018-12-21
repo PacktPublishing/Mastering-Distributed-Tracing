@@ -1,0 +1,125 @@
+version: '3.5'
+
+# to generate the traces, can use hotrod:
+# $ JAEGER_ENDPOINT=http://localhost:14268/api/traces go run ./examples/hotrod/main.go all
+
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3
+    volumes:
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.2.3
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+# $ docker exec -it $(docker ps -qf "name=kafka") /bin/bash
+# $ kafka-consumer-groups --bootstrap-server kafka:9092 --describe --group jaeger-ingester
+  kafka:
+    image: confluentinc/cp-kafka:4.0.1
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1
+      # https://rmoff.net/2018/08/02/kafka-listeners-explained/
+      KAFKA_ADVERTISED: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+    restart: on-failure
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:4.0.1
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: "2181"
+
+  jaeger-collector:
+    image: jaegertracing/jaeger-collector:1.8.2
+    ports:
+      # HTTP collector port to receive spans
+      - "14268:14268"
+      # HTTP health check port: $ curl -v http://localhost:14269/
+      - "14269:14269"
+    restart: on-failure
+    environment:
+      LOG_LEVEL: "debug"
+      SPAN_STORAGE_TYPE: "kafka"
+      KAFKA_BROKERS: "kafka:29092"
+
+  jaeger-ingester:
+    image: jaegertracing/jaeger-ingester:1.8.2
+    ports:
+      # HTTP health check port: $ curl -v http://localhost:14270/
+      - "14270:14270"
+      # Metrics port: $ curl http://localhost:14271/metrics
+      - "14271:14271"
+    restart: on-failure
+    environment:
+      # LOG_LEVEL: "debug"
+      INGESTER_PARALLELISM: "1"
+      INGESTER_DEADLOCKINTERVAL: "0ms"
+      SPAN_STORAGE_TYPE: "elasticsearch"
+      ES_SERVER_URLS: "http://elasticsearch:9200"
+      KAFKA_BROKERS: "kafka:29092"
+      METRICS_BACKEND: "expvar"
+
+  jaeger:
+    image: jaegertracing/jaeger-query:1.8.2
+    ports:
+      # Jaeger UI port
+      - "16686:16686"
+      # HTTP health check port: $ curl -v http://localhost:16687/
+      - "16687:16687"
+    restart: on-failure
+    environment:
+      # LOG_LEVEL: "debug"
+      SPAN_STORAGE_TYPE: "elasticsearch"
+      ES_SERVER_URLS: "http://elasticsearch:9200"
+
+  # tools:
+  #   image: alpine:latest
+  #   entrypoint:
+  #     - watch 
+  #     - echo
+  #     - hello
+
+  # prom:
+  #   image: prom/prometheus:v2.5.0
+  #   volumes:
+  #     - ./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #   command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
+  #   ports:
+  #     - 9090:9090
+
+  # jaeger:
+  #   image: jaegertracing/all-in-one:1.8.2
+  #   ports:
+  #     - "5775:5775/udp"
+  #     - "6831:6831/udp"
+  #     - "6832:6832/udp"
+  #     - "5778:5778"
+  #     - "14267"
+  #     - "14268:14268"
+  #     - "14269"
+  #     - "16686:16686"
+  #     - "16687"
+  #     - "9411:9411"
+  #   restart: on-failure
+  #   environment:
+  #     SPAN_STORAGE_TYPE: "elasticsearch"
+  #     ES_SERVER_URLS: "http://elasticsearch:9200"

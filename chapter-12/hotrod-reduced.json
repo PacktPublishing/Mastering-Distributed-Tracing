@@ -1,0 +1,207 @@
+{
+  "Services": [
+    {
+      "Name": "ui",
+      "Endpoints": [
+        {
+          "Name": "/",
+          "Depends": {
+            "Service": {
+              "Name": "frontend",
+              "Endpoint": "/dispatch"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Name": "frontend",
+      "Endpoints": [
+        {
+          "Name": "/dispatch",
+          "Depends": {
+            "Seq": [
+              {
+                "Service": {
+                  "Name": "customer",
+                  "Endpoint": "/customer"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "driver",
+                  "Endpoint": "/FindNearest"
+                }
+              },
+              {
+                "Par": {
+                  "Items": [
+                    {
+                      "Service": {
+                        "Name": "route",
+                        "Endpoint": "/GetShortestRoute"
+                      }
+                    },
+                    {
+                      "Service": {
+                        "Name": "route",
+                        "Endpoint": "/GetShortestRoute"
+                      }
+                    },
+                    {
+                      "Service": {
+                        "Name": "route",
+                        "Endpoint": "/GetShortestRoute"
+                      }
+                    },
+                    {
+                      "Service": {
+                        "Name": "route",
+                        "Endpoint": "/GetShortestRoute"
+                      }
+                    },
+                    {
+                      "Service": {
+                        "Name": "route",
+                        "Endpoint": "/GetShortestRoute"
+                      }
+                    }
+                  ],
+                  "MaxPar": 3
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Name": "customer",
+      "Endpoints": [
+        {
+          "Name": "/customer",
+          "Depends": {
+            "Seq": [
+              {
+                "Service": {
+                  "Name": "mysql"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Name": "driver",
+      "Endpoints": [
+        {
+          "Name": "/FindNearest",
+          "Depends": {
+            "Seq": [
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/FindDriverIDs"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/GetDriver"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/GetDriver"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/GetDriver"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/GetDriver"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/GetDriver"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/GetDriver"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/GetDriver"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/GetDriver"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/GetDriver"
+                }
+              },
+              {
+                "Service": {
+                  "Name": "redis",
+                  "Endpoint": "/GetDriver"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "Count": 2
+    },
+    {
+      "Name": "route",
+      "Endpoints": [
+        {
+          "Name": "/GetShortestRoute"
+        }
+      ],
+      "Count": 3
+    },
+    {
+      "Name": "mysql",
+      "Endpoints": [
+        {
+          "Name": "/sql_select"
+        }
+      ]
+    },
+    {
+      "Name": "redis",
+      "Endpoints": [
+        {
+          "Name": "/FindDriverIDs"
+        },
+        {
+          "Name": "/GetDriver"
+        }
+      ]
+    }
+  ],
+  "TestDuration": 0,
+  "TestRunners": 0,
+  "Repeats": 0,
+  "SleepBetweenRequests": 0
+}
