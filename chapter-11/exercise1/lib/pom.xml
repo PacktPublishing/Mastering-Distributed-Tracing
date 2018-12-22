@@ -8,9 +8,9 @@
 
     <parent>
         <groupId>com.packt.distributed-tracing-chapter-11</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>exercise1</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
