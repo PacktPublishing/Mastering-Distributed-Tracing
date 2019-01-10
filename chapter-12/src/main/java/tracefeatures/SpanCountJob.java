@@ -75,6 +75,7 @@ public class SpanCountJob {
     private static TraceSummary traceToSummary(Trace trace) throws Exception {
         Map<String, Integer> counts = new HashMap<>();
         long startTime = 0;
+        String testName = null;
         for (Span span : trace.spans) {
             String opKey = span.serviceName + "::" + span.operationName;
             Integer count = counts.get(opKey);
@@ -87,11 +88,16 @@ public class SpanCountJob {
             if (startTime == 0 || startTime > span.startTimeMicros) {
                 startTime = span.startTimeMicros;
             }
+            String v = span.tags.get("test_name");
+            if (v != null) {
+                testName = v;
+            }
         }
         TraceSummary summary = new TraceSummary();
         summary.traceId = trace.traceId;
         summary.spanCounts = counts;
         summary.startTimeMillis = startTime / 1000; // to milliseconds
+        summary.testName = testName;
         return summary;
     }
 }

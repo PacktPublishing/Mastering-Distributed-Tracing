@@ -5,6 +5,9 @@
                 "@timestamp": {
                     "type": "date",
                     "format": "epoch_millis"
+                },
+                "testName": {
+                    "type": "keyword"
                 }
             }
         }

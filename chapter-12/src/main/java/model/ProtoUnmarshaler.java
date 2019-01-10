@@ -1,6 +1,7 @@
 package model;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ByteString.ByteIterator;
@@ -27,6 +28,16 @@ public class ProtoUnmarshaler extends AbstractDeserializationSchema<Span> {
         span.operationName = protoSpan.getOperationName();
         span.serviceName = protoSpan.getProcess().getServiceName();
         span.startTimeMicros = Timestamps.toMicros(protoSpan.getStartTime());
+        span.tags = new HashMap<>();
+        for (Model.KeyValue kv : protoSpan.getTagsList()) {
+            if (!Model.ValueType.STRING.equals(kv.getVType())) {
+                continue;
+            }
+            String value = kv.getVStr();
+            if (value != null) {
+                span.tags.put(kv.getKey(), value);
+            }
+        }
         return span;
     }
 

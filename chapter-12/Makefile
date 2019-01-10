@@ -1,4 +1,4 @@
-MICROSIM_VER  = yurishkuro/microsim:0.1.0
+MICROSIM_VER  = yurishkuro/microsim:0.2.0
 MICROSIM_ARGS = -v $(PWD):/ch12:ro --net host
 MICROSIM_ORIGINAL = -c /ch12/hotrod-original.json
 MICROSIM_REDUCED  = -c /ch12/hotrod-reduced.json

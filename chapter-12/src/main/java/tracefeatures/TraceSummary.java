@@ -7,4 +7,5 @@ public class TraceSummary implements Serializable {
     public String traceId;
     public long startTimeMillis;
     public Map<String, Integer> spanCounts;
+    public String testName;
 }

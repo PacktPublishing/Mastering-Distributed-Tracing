@@ -43,6 +43,10 @@ public class ESSink {
         json.put("traceId", summary.traceId);
         json.put("@timestamp", summary.startTimeMillis);
         json.put("spanCounts", summary.spanCounts);
+        if (summary.testName != null) {
+            // null check is just a precaution, in case we don't receive the root span.
+            json.put("testName", summary.testName);
+        }
         return json;
     }
 }
