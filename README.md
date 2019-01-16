@@ -1,2 +1,2 @@
-# Distributed-Tracing
-Distributed-Tracing, published by Packt
+# Mastering Distributed Tracing
+Mastering-Distributed-Tracing, published by Packt
