@@ -1,6 +1,6 @@
 # Mastering Distributed Tracing
 
-by [Yuri Shkuro](https://www.shkuro.com)
+by [Yuri Shkuro](https://www.shkuro.com). Illustrations by [Lev Polyakov](https://polyakovproductions.com/).
 
 Published by: Packt Publishing (2019)
 
