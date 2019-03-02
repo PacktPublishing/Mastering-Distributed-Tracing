@@ -5,7 +5,7 @@ by [Yuri Shkuro](https://www.shkuro.com). Illustrations by [Lev Polyakov](https:
 Published by: Packt Publishing (2019)
 
 * https://www.packtpub.com/networking-and-servers/mastering-distributed-tracing
-* https://www.amazon.com/gp/product/B07MBNGF7Q
+* https://www.amazon.com/dp/1788628462
 
 This repository includes source code for examples from the following chapters:
 
