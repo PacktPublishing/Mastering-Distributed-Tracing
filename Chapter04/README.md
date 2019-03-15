@@ -1,4 +1,4 @@
-# Instrumentation Basics with OpenTracing
+# Chapter 4: Instrumentation Basics with OpenTracing
 
 This chapter contains a step-by-step walk-through of instrumenting a simple application for tracing while evolving it from a monolith to a microservices-based application. The examples are provided in three programming languages (Go, Java, and Python), to illustrate the language-specific differences of applying the concepts of the OpenTracing APIs.
 
