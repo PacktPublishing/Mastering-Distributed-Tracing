@@ -6,7 +6,7 @@
         </encoder>
     </appender>
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>${logstash.host}:5000</destination>
+        <destination>${logstash.host}:6000</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <customFields>{"application":"hello-app","service":"formatter-1"}</customFields>
         </encoder>
