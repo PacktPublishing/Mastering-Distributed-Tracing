@@ -12,10 +12,10 @@ public class Person {
     private String name;
  
     @Column(nullable = false)
-    private String title;
+    private String title = "";
  
     @Column(nullable = false)
-    private String description;
+    private String description = "";
 
     public Person() {}
 
