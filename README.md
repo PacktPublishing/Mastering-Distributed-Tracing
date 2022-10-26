@@ -17,3 +17,7 @@ _Mastering Distributed Tracing_ provides comprehensive coverage of the tracing f
 * [Chapter 7: Tracing with Service Mesh](./Chapter07)
 * [Chapter 11: Integration with Metrics and Logs](./Chapter11)
 * [Chapter 12: Gathering Insights Through Data Mining](./Chapter12)
+### Download a free PDF
+
+ <i>If you have already purchased a print or Kindle version of this book, you can get a DRM-free PDF version at no cost.<br>Simply click on the link to claim your free PDF.</i>
+<p align="center"> <a href="https://packt.link/free-ebook/9781788628464">https://packt.link/free-ebook/9781788628464 </a> </p>
